@@ -1,6 +1,3 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.gradle.kotlin.dsl.dependencies as dependencies
-
 plugins {
     kotlin("jvm") version "1.6.21"
     application
@@ -13,13 +10,12 @@ repositories {
     mavenCentral()
 }
 
-dependencies {
-    implementation("io.kotest:kotest-runner-junit5:5.3.0")
-    testImplementation(kotlin("test"))
-}
+val kotest_version = "5.3.0"
 
-tasks.test {
-    useJUnitPlatform()
+dependencies {
+    testImplementation("io.kotest:kotest-runner-junit5:$kotest_version")
+    testImplementation("io.kotest:kotest-assertions-core:$kotest_version")
+    testImplementation("io.kotest:kotest-framework-datatest:$kotest_version")
 }
 
 tasks.withType<Test>().configureEach {
