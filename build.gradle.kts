@@ -30,7 +30,7 @@ tasks {
         arguments = arguments + listOf(
             "-visitor",
             "-long-messages",
-            "-package", "family.haschka.wolkenschloss.cookbook.parser"
+            "-package", "family.haschka.analyticalc"
         )
     }
 
