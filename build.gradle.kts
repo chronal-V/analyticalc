@@ -26,19 +26,20 @@ dependencies {
 tasks {
     generateGrammarSource {
 
-        outputDirectory = project.layout.buildDirectory.file("generated-src/antlr/main/family/haschka/wolkenschloss/cookbook/parser").get().asFile
+        outputDirectory = project.layout.buildDirectory.file("generated-src/antlr/main/family/haschka/analyticalc").get().asFile
         arguments = arguments + listOf(
             "-visitor",
             "-long-messages",
             "-package", "family.haschka.wolkenschloss.cookbook.parser"
         )
     }
+
     withType<Test>().configureEach {
         useJUnitPlatform()
     }
 
     withType<KotlinCompile>() {
-        dependsOn(generateGrammerSource)
+        dependsOn(generateGrammarSource)
     }
 }
 
