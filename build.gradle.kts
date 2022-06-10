@@ -14,9 +14,10 @@ repositories {
 }
 
 val kotest_version = "5.3.0"
+val antlr_version = "4.9.2"
 
 dependencies {
-    antlr("org.antlr:antlr4:4.9.2")
+    antlr("org.antlr:antlr4:$antlr_version")
 
     testImplementation("io.kotest:kotest-runner-junit5:$kotest_version")
     testImplementation("io.kotest:kotest-assertions-core:$kotest_version")

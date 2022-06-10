@@ -1,24 +1,14 @@
-import family.haschka.analyticalc.EvalBaseVisitor
-import family.haschka.analyticalc.EvalParser
+import family.haschka.analyticalc.CalcBaseVisitor
+import family.haschka.analyticalc.CalcParser
 
-class FunctionVisitor : EvalBaseVisitor<String>() {
+class FunctionVisitor : CalcBaseVisitor<String>() {
 
-    class ExpressionVisitor : EvalBaseVisitor<Expression>() {
 
-        override fun visitExpression(ctx: EvalParser.ExpressionContext?): Expression {
-            return Expression(/** ctx **/)
-        }
-    }
-
-    override fun visitFunction(ctx: EvalParser.FunctionContext?): String {
+    override fun visitFunction(ctx: CalcParser.FunctionContext?): String {
         if (ctx == null) {
-            return "Context ist Null"
+            throw NullPointerException("Function is null")
         }
 
-
-        val expr = ctx.expression()
-        var variable = ctx.VAR().text
-        return Function(variable, expr)
-        return "f(${ctx.VAR().text})="
+        return ctx.toStringTree();
     }
 }
