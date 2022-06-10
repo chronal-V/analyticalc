@@ -6,7 +6,7 @@ class ExpressionVisitor : CalcBaseVisitor<Expression>() {
 
     override fun visitNumber(ctx: CalcParser.NumberContext?): Expression {
         if (ctx != null) {
-            return NumberExpr(ctx.number.toString().toInt())
+            return NumberExpr(ctx.number.text.toInt())
         } else throw NullPointerException("Number is null")
     }
 
@@ -16,7 +16,10 @@ class ExpressionVisitor : CalcBaseVisitor<Expression>() {
         } else throw NullPointerException("Product is null")
     }
 
-    /*override fun aggregateResult(aggregate: Expression?, nextResult: Expression?): Expression {
+    override fun aggregateResult(aggregate: Expression?, nextResult: Expression?): Expression {
+        if(nextResult != null && aggregate != null) {
+            return SimpleExpression(aggregate, nextResult)
+        }
         if (nextResult != null) {
             return nextResult
         }
@@ -24,5 +27,5 @@ class ExpressionVisitor : CalcBaseVisitor<Expression>() {
             return aggregate
         }
         throw NullPointerException("Whatever")
-    }*/
+    }
 }
