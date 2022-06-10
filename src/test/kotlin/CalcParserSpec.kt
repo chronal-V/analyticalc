@@ -30,6 +30,7 @@ class CalcParserSpec : FunSpec({
         val parser = CalcParser(tokens)
         val parseTree = parser.expr()
 
+        println(parseTree.toStringTree(parser))
         val result = ExpressionVisitor().visit(parseTree)
         println(result)
     }
