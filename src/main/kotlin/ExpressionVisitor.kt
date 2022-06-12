@@ -4,6 +4,10 @@ import family.haschka.analyticalc.CalcParser
 
 class ExpressionVisitor : CalcBaseVisitor<Expression>() {
 
+    override fun visitVariable(ctx: CalcParser.VariableContext): Expression {
+        return Variable(ctx.VAR().text)
+    }
+
     override fun visitNumber(ctx: CalcParser.NumberContext): Expression {
         return NumberExpr(ctx.NUM().text.toInt())
     }
@@ -16,7 +20,7 @@ class ExpressionVisitor : CalcBaseVisitor<Expression>() {
         if(ctx.ADD().text == "+") {
             return Sum(left, right)
         } else if (ctx.ADD().text == "-") {
-            return Subtracion(left, right)
+            return Subtraction(left, right)
         }
 
         throw RuntimeException("Unexpected operand ${ctx.ADD().text}")

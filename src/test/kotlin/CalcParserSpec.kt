@@ -1,7 +1,4 @@
-import expressions.Division
-import expressions.Multiplication
-import expressions.NumberExpr
-import expressions.Sum
+import expressions.*
 import family.haschka.analyticalc.*
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.datatest.withData
@@ -41,10 +38,10 @@ class CalcParserSpec : FunSpec({
 
         context("Expression Parser -> DataClasses korrekt übersetzen") {
             withData(
-                "1 * 2" to Multiplication(NumberExpr(1), NumberExpr(2)),
+                "1 * 2 + x" to Sum(Multiplication(NumberExpr(1), NumberExpr(2)), Variable("x")),
                 "3 / 4" to Division(NumberExpr(3), NumberExpr(4)),
-                "1+2*3" to Sum(NumberExpr(1), Multiplication(NumberExpr(2), NumberExpr(3)))
-
+                "1+2*3" to Sum(NumberExpr(1), Multiplication(NumberExpr(2), NumberExpr(3))),
+                "1*2 + 3*4" to Sum(Multiplication(NumberExpr(1), NumberExpr(2)), Multiplication(NumberExpr(3), NumberExpr(4)))
             ) {
                 val input = CharStreams.fromString(it.first)
                 val lexer = CalcLexer(input)
@@ -53,8 +50,69 @@ class CalcParserSpec : FunSpec({
                 val parseTree = parser.expr()
 
                 val result = ExpressionVisitor().visit(parseTree)
+                println(result)
                 result shouldBe it.second
             }
+
+            test("Trivialitäten") {
+            }
+
+
+        }
+        data class NumberExprOperatorTest(val a: NumberExpr, val b: NumberExpr, val erwartet: NumberExpr)
+        context("NumberExpr(a) + NumberExpr(b) sollte NumberExpr(a + b) sein") {
+            withData(
+                NumberExprOperatorTest(NumberExpr(3), NumberExpr(4), NumberExpr(7)),
+                NumberExprOperatorTest(NumberExpr(345), NumberExpr(5647), NumberExpr(5992)),
+            ) { testfall ->
+                testfall.a + testfall.b shouldBe testfall.erwartet
+            }
+        }
+        context("NumberExpr(a) - NumberExpr(b) sollte NumberExpr(a - b) sein") {
+            withData(
+                NumberExprOperatorTest(NumberExpr(10), NumberExpr(4), NumberExpr(6)),
+                NumberExprOperatorTest(NumberExpr(345), NumberExpr(350), NumberExpr(-5)),
+            ) {testfall ->
+                testfall.a - testfall.b shouldBe testfall.erwartet
+            }
+        }
+        context("NumberExpr(a) * NumberExpr(b) sollte NumberExpr(a * b) sein") {
+            withData(
+                NumberExprOperatorTest(NumberExpr(5), NumberExpr(6), NumberExpr(30)),
+                NumberExprOperatorTest(NumberExpr(100), NumberExpr(5), NumberExpr(500)),
+            ) {testfall ->
+                testfall.a * testfall.b shouldBe testfall.erwartet
+            }
+        }
+        context("NumberExpr(a) / NumberExpr(b) sollte NumberExpr(a / b) sein") {
+            withData(
+                NumberExprOperatorTest(NumberExpr(40), NumberExpr(4), NumberExpr(10)),
+                NumberExprOperatorTest(NumberExpr(100), NumberExpr(100), NumberExpr(1)),
+            ) {testfall ->
+                testfall.a / testfall.b shouldBe testfall.erwartet
+            }
+        }
+
+
+        context("Rein numerische Rechenausdrücke können vollständig zu NumberExpr vereinfacht werden. Symbolische bleiben einfach stehen") {
+            withData(
+                "1 * 2" to NumberExpr(2),
+                "20 / 4" to NumberExpr(5),
+                "1+2*3" to NumberExpr(7),
+                "1*2 + 3*4" to NumberExpr(14),
+                "2*3 + x" to Sum(NumberExpr(6), Variable("x")),
+                ) {
+
+                    val input = CharStreams.fromString(it.first)
+                    val lexer = CalcLexer(input)
+                    val tokens = CommonTokenStream(lexer)
+                    val parser = CalcParser(tokens)
+                    val parseTree = parser.expr()
+
+                    val result = ExpressionVisitor().visit(parseTree).simplify()
+                    println(result)
+                    result shouldBe it.second
+                }
         }
 
     }
