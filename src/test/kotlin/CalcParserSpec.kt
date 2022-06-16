@@ -65,7 +65,7 @@ class CalcParserSpec : FunSpec({
                 NumberExprOperatorTest(NumberExpr(3), NumberExpr(4), NumberExpr(7)),
                 NumberExprOperatorTest(NumberExpr(345), NumberExpr(5647), NumberExpr(5992)),
             ) { testfall ->
-                testfall.a + testfall.b shouldBe testfall.erwartet
+                (testfall.a + testfall.b).simplify() shouldBe testfall.erwartet
             }
         }
         context("NumberExpr(a) - NumberExpr(b) sollte NumberExpr(a - b) sein") {
@@ -73,7 +73,7 @@ class CalcParserSpec : FunSpec({
                 NumberExprOperatorTest(NumberExpr(10), NumberExpr(4), NumberExpr(6)),
                 NumberExprOperatorTest(NumberExpr(345), NumberExpr(350), NumberExpr(-5)),
             ) {testfall ->
-                testfall.a - testfall.b shouldBe testfall.erwartet
+                (testfall.a - testfall.b).simplify() shouldBe testfall.erwartet
             }
         }
         context("NumberExpr(a) * NumberExpr(b) sollte NumberExpr(a * b) sein") {
@@ -81,7 +81,7 @@ class CalcParserSpec : FunSpec({
                 NumberExprOperatorTest(NumberExpr(5), NumberExpr(6), NumberExpr(30)),
                 NumberExprOperatorTest(NumberExpr(100), NumberExpr(5), NumberExpr(500)),
             ) {testfall ->
-                testfall.a * testfall.b shouldBe testfall.erwartet
+                (testfall.a * testfall.b).simplify() shouldBe testfall.erwartet
             }
         }
         context("NumberExpr(a) / NumberExpr(b) sollte NumberExpr(a / b) sein") {
@@ -89,7 +89,7 @@ class CalcParserSpec : FunSpec({
                 NumberExprOperatorTest(NumberExpr(40), NumberExpr(4), NumberExpr(10)),
                 NumberExprOperatorTest(NumberExpr(100), NumberExpr(100), NumberExpr(1)),
             ) {testfall ->
-                testfall.a / testfall.b shouldBe testfall.erwartet
+                (testfall.a / testfall.b).simplify() shouldBe testfall.erwartet
             }
         }
 
